@@ -6,6 +6,7 @@ import Project from "./Components/Project/Project"
 import Layout from "./Components/Layout/Layout"
 import LogIn from "./Components/LogIn/LogIn"
 import LogOff from "./Components/LogOff/LogOff"
+import Register from "./Components/Register/Register"
 
 const App = () => {
     const [user, setUser] = useState({
@@ -55,6 +56,7 @@ const App = () => {
                         element={<LogIn user={user} setUser={setUser} />}
                     />
                     <Route path="/logoff" element={<LogOff setUser={setUser} />} />
+                    <Route path="/register" element={<Register />}/>
                     <Route path="*" element={<h3>404</h3>} />
                 </Route>
             </Routes>

@@ -21,6 +21,10 @@ const items = [
     label: <Link to={"/logoff"}>Выход</Link>,
     key: "4",
   },
+  {
+    label: <Link to={"/register"}>Регистрация</Link>,
+    key: "5",
+  },
 ]
 
 const Layout = ({ user }) => {

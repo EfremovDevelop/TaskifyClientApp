@@ -20,7 +20,7 @@ const LogOff = ({ setUser }) => {
     const requestOptions = {
       method: "POST",
     }
-    return await fetch("api/account/logoff", requestOptions).then(
+    return await fetch("api/logoff", requestOptions).then(
       (response) => {
         response.status === 200 &&
           setUser({ isAuthenticated: false, userName: "" })
