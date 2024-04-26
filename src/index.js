@@ -7,6 +7,7 @@ import Layout from "./Components/Layout/Layout"
 import LogIn from "./Components/LogIn/LogIn"
 import LogOff from "./Components/LogOff/LogOff"
 import Register from "./Components/Register/Register"
+import Issue from "./Components/Issue/Issue"
 
 const App = () => {
     const [user, setUser] = useState({
@@ -48,7 +49,7 @@ const App = () => {
                     <Route
                         path="/projects"
                         element={
-                                <Project user={user} />
+                            <Project user={user} />
                         }
                     />
                     <Route
@@ -56,7 +57,8 @@ const App = () => {
                         element={<LogIn user={user} setUser={setUser} />}
                     />
                     <Route path="/logoff" element={<LogOff setUser={setUser} />} />
-                    <Route path="/register" element={<Register />}/>
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/project/:projectId/issues" element={<Issue user={user} />} />
                     <Route path="*" element={<h3>404</h3>} />
                 </Route>
             </Routes>

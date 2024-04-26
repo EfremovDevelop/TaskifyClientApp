@@ -24,7 +24,7 @@ const ProjectCreate = ({ addProject }) => {
         },
         body: JSON.stringify(values),
       };
-      const response = await fetch("api/projects", options);
+      const response = await fetch("api/UserProjects", options);
       if (response.ok) {
         const project = await response.json();
         addProject(project);
