@@ -34,7 +34,7 @@ const IssueForm = ({ onSubmit, onSubmitBack, statusId }) => {
     };
 
     return (
-        <Form layout="vertical" onFinish={handleSubmit}>
+        <Form layout="vertical" style={{ padding: "20px" }} onFinish={handleSubmit}>
             <Form.Item label="Name" required>
                 <Input
                     value={formData.name}

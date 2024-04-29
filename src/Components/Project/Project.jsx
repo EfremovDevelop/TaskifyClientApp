@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Button, Modal } from "antd";
+import { Card, Button } from "antd";
 import { useNavigate } from 'react-router-dom';
 import ProjectCreate from "./ProjectCreate";
 
@@ -30,35 +30,13 @@ const Project = ({ user }) => {
         getProjects();
     }, []);
 
-    const deleteProject = async (projectId) => {
-        const options = {
-            method: "DELETE",
-        };
-        const result = await fetch(`${url}/${projectId}`, options);
-        console.log(projectId)
-        if (result.ok) {
-            await getProjects();
-            console.log("Delete project with id:", projectId);
-        } else {
-            console.error("Failed to delete project");
-        }
-    }
-
-    const handleDelete = (projectId) => {
-        Modal.confirm({
-            title: "Удалить проект",
-            content: "Вы уверены, что хотите удалить этот проект?",
-            onOk() {
-                deleteProject(projectId);
-            },
-        });
-    };
-
     const navigate = useNavigate();
     const showProjectIssues = (projectId) => {
         navigate(`/project/${projectId}/issues`);
     };
-
+    const showProjectInfo = (projectId) => {
+        navigate(`/project/${projectId}`);
+    };
     return (
         <div>
             {user.isAuthenticated && (
@@ -74,10 +52,9 @@ const Project = ({ user }) => {
                                 <Button
                                     key="delete"
                                     type="text"
-                                    danger
-                                    onClick={() => handleDelete(project.id)}
+                                    onClick={() => showProjectInfo(project.id)}
                                 >
-                                    Удалить
+                                    Подробнее
                                 </Button>,
                                 <Button
                                     key="delete"
