@@ -105,8 +105,9 @@ const ProjectInfo = () => {
                 dataSource={projectUsers}
                 renderItem={(projectUser) => (
                     <List.Item>
-                        <Text strong>{projectUser.userName}</Text> - <Text>{projectUser.email}</Text>
+                        <Text strong>{projectUser.userName}</Text> - <Text>{projectUser.email}</Text> - <Text>{projectUser.role.name}</Text>
                     </List.Item>
+
                 )}
             />
 
