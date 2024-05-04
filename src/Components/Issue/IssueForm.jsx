@@ -3,13 +3,13 @@ import { Form, Input, Button, Select } from "antd";
 
 const { Option } = Select;
 
-const IssueForm = ({ onSubmit, onSubmitBack, statusId }) => {
-
+const IssueForm = ({ onSubmit, onSubmitBack, statusId, projectUsers }) => {
     const [formData, setFormData] = useState({
         name: "",
         description: "",
         timeSpent: "",
-        statusId: parseInt(statusId)
+        statusId: parseInt(statusId),
+        assignedUserId: "" // Добавленное поле для выбора AssignedUser
     });
 
     const handleChange = (key, value) => {
@@ -25,7 +25,8 @@ const IssueForm = ({ onSubmit, onSubmitBack, statusId }) => {
             name: "",
             description: "",
             timeSpent: "",
-            statusId: 1
+            statusId: 1,
+            assignedUserId: "" // Сброс значения после отправки формы
         });
     };
     
@@ -64,6 +65,18 @@ const IssueForm = ({ onSubmit, onSubmitBack, statusId }) => {
                     <Option value={3}>Review</Option>
                     <Option value={4}>Reopened</Option>
                     <Option value={5}>Closed</Option>
+                </Select>
+            </Form.Item>
+            <Form.Item label="Assigned User" required>
+                <Select
+                    value={formData.assignedUserId}
+                    onChange={(value) => handleChange("assignedUserId", value)}
+                >
+                    {projectUsers.map(user => (
+                        <Option key={user.userId} value={user.userId}>
+                            {user.userName} ({user.email})
+                        </Option>
+                    ))}
                 </Select>
             </Form.Item>
             <Form.Item>

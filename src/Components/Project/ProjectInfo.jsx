@@ -81,6 +81,10 @@ const ProjectInfo = () => {
         }
     };
 
+    const handleNavigateIssues = () => {
+        navigate(`/project/${projectId}/issues`);
+    }
+
     const closeModal = () => {
         setIsModalVisible(false); // Закрываем модальное окно
     };
@@ -132,6 +136,16 @@ const ProjectInfo = () => {
                     </Button>
                 </>
             )}
+
+            <>
+                <Button
+                    type="primary"
+                    onClick={handleNavigateIssues}
+                    style={{ marginLeft: "10px" }}
+                >
+                    Задачи
+                </Button>
+            </>
 
             {/* Модальное окно добавления участника */}
             <AddParticipantModal

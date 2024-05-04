@@ -16,6 +16,7 @@ const Issue = () => {
                 const response = await fetch(`/api/issues/${id}`);
                 if (response.ok) {
                     const data = await response.json();
+                    console.log(data);
                     setIssue(data);
                     setLoading(false);
                 } else {
@@ -69,6 +70,7 @@ const Issue = () => {
                         ["Описание", issue.description],
                         ["Затраченное время", issue.timeSpent],
                         ["Статус", getStatusText(issue.statusId)],
+                        ["Назначена на", issue.assignedUserName],
                         ["Дата создания", convertToMoscowTime(issue.createdDate)],
                         ["Дата обновления", convertToMoscowTime(issue.updateDate)],
                     ]}
