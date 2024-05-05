@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Spin, List, Typography, Button, Input, Form, Row, Col } from "antd";
+import { Spin, List, Typography, Button, Input, Form } from "antd";
+import Comment from "./Comment";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -11,15 +12,11 @@ const Issue = () => {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [commentText, setCommentText] = useState("");
-    const navigate = useNavigate(); // Получаем функцию для навигации
+    const navigate = useNavigate();
 
     const convertToMoscowTime = (dateTimeString) => {
         const date = new Date(dateTimeString);
         return date.toLocaleString("ru-RU", { timeZone: "Europe/Moscow" });
-    };
-
-    const handleGoBack = () => {
-        navigate(-1);
     };
 
     const getStatusText = (statusId) => {
@@ -51,13 +48,13 @@ const Issue = () => {
                 }),
             });
             if (response.ok) {
-                fetchComments(); // Вызываем fetchComments после успешного добавления комментария
-                setCommentText(""); // Очищаем поле ввода
+                fetchComments();
+                setCommentText("");
             } else {
-                console.error("Ошибка при добавлении комментария");
+                console.error("Error adding comment");
             }
         } catch (error) {
-            console.error("Ошибка при выполнении запроса к API:", error);
+            console.error("Error executing API request:", error);
         }
     };
 
@@ -66,35 +63,38 @@ const Issue = () => {
             const response = await fetch(`/api/IssueComments/${id}`);
             if (response.ok) {
                 const data = await response.json();
-                console.log(data);
                 setComments(data);
             } else {
-                console.error("Ошибка при получении комментариев");
+                console.error("Error fetching comments");
             }
         } catch (error) {
-            console.error("Ошибка при выполнении запроса к API:", error);
+            console.error("Error executing API request:", error);
+        }
+    };
+
+    const fetchIssue = async () => {
+        try {
+            const response = await fetch(`/api/issues/${id}`);
+            if (response.ok) {
+                const data = await response.json();
+                setIssue(data);
+                setLoading(false);
+            } else {
+                console.error("Error fetching issue data");
+            }
+        } catch (error) {
+            console.error("Error executing API request:", error);
         }
     };
 
     useEffect(() => {
-        const fetchIssue = async () => {
-            try {
-                const response = await fetch(`/api/issues/${id}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setIssue(data);
-                    setLoading(false);
-                } else {
-                    console.error("Ошибка при получении данных о задаче");
-                }
-            } catch (error) {
-                console.error("Ошибка при выполнении запроса к API:", error);
-            }
-        };
-
         fetchIssue();
         fetchComments();
     }, [id]);
+
+    const handleGoBack = () => {
+        navigate(-1);
+    };
 
     return (
         <div>
@@ -103,16 +103,16 @@ const Issue = () => {
             ) : (
                 <>
                     <List
-                        header={<div>Информация о задаче</div>}
+                        header={<div>Issue Information</div>}
                         bordered
                         dataSource={issue ? [
-                            { title: "Название", content: issue.name },
-                            { title: "Описание", content: issue.description },
-                            { title: "Затраченное время", content: issue.timeSpent },
-                            { title: "Статус", content: getStatusText(issue.statusId) },
-                            { title: "Назначена на", content: issue.assignedUserName },
-                            { title: "Дата создания", content: convertToMoscowTime(issue.createdDate) },
-                            { title: "Дата обновления", content: convertToMoscowTime(issue.updateDate) },
+                            { title: "Name", content: issue.name },
+                            { title: "Description", content: issue.description },
+                            { title: "Time Spent", content: issue.timeSpent },
+                            { title: "Status", content: getStatusText(issue.statusId) },
+                            { title: "Assigned To", content: issue.assignedUserName },
+                            { title: "Created Date", content: convertToMoscowTime(issue.createdDate) },
+                            { title: "Update Date", content: convertToMoscowTime(issue.updateDate) },
                         ] : []}
                         renderItem={(item) => (
                             <List.Item>
@@ -122,29 +122,13 @@ const Issue = () => {
                     />
 
                     <div style={{ margin: "20px 0" }}>
-                        <h3>Комментарии:</h3>
+                        <h3>Comments:</h3>
                         <List
                             bordered
                             dataSource={comments}
                             renderItem={(comment) => (
                                 <List.Item>
-                                    <Row gutter={16} justify="space-between">
-                                        <Col>
-                                            <Text strong>Комментарий: </Text>
-                                            <Text>{comment.comment}</Text>
-                                            <br />
-                                        </Col>
-                                        <Col>
-                                            <Row gutter={8}>
-                                                <Col>
-                                                    <Text strong>{comment.user.userName}</Text>
-                                                </Col>
-                                                <Col>
-                                                    <Text strong>{convertToMoscowTime(comment.createdDate)}</Text>
-                                                </Col>
-                                            </Row>
-                                        </Col>
-                                    </Row>
+                                    <Comment comment={comment} />
                                 </List.Item>
                             )}
                         />
@@ -155,17 +139,17 @@ const Issue = () => {
                                     rows={4}
                                     value={commentText}
                                     onChange={(e) => setCommentText(e.target.value)}
-                                    placeholder="Введите комментарий"
+                                    placeholder="Enter comment"
                                 />
                             </Form.Item>
                             <Form.Item>
                                 <Button type="primary" htmlType="submit">
-                                    Добавить комментарий
+                                    Add Comment
                                 </Button>
                             </Form.Item>
                         </Form>
                     </div>
-                    <Button type="primary" onClick={handleGoBack} style={{ marginTop: "20px" }}>Назад</Button>
+                    <Button type="primary" onClick={handleGoBack} style={{ marginTop: "20px" }}>Back</Button>
                 </>
             )}
         </div>
