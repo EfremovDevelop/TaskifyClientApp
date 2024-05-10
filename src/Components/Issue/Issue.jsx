@@ -120,7 +120,9 @@ const Issue = () => {
             });
             if (response.ok) {
                 const updatedIssue = await response.json();
-                setIssue(updatedIssue);
+                console.log(updatedIssue);
+                fetchIssue();
+                //setIssue(updatedIssue);
             } else {
                 console.error("Error updating issue");
             }
