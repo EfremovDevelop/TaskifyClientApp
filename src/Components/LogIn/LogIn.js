@@ -13,7 +13,7 @@ const LogIn = ({ user, setUser }) => {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                email: formValues.email, // Изменили на email
+                email: formValues.email,
                 password: formValues.password,
                 rememberme: formValues.remember,
             }),
@@ -66,11 +66,11 @@ const LogIn = ({ user, setUser }) => {
                         autoComplete="off"
                     >
                         <Form.Item
-                            label="Email" // Изменили на Email
-                            name="email" // Изменили на email
+                            label="Email"
+                            name="email"
                             rules={[
                                 { required: true, message: "Please input your email!" },
-                                { type: "email", message: "Please enter a valid email!" }, // Добавили проверку на корректный email
+                                { type: "email", message: "Please enter a valid email!" },
                             ]}
                         >
                             <Input />
