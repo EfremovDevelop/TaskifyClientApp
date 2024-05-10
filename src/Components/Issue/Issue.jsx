@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Spin, List, Typography, Button, Input, Form } from "antd";
+import { useParams } from "react-router-dom";
+import { Spin, List, Typography, Button, Input, Form, Modal } from "antd";
 import Comment from "./Comment";
+import IssueForm from "./IssueForm";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -12,14 +13,13 @@ const Issue = () => {
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [commentText, setCommentText] = useState("");
-    const navigate = useNavigate();
+    const [showEditModal, setShowEditModal] = useState(false); // Состояние модального окна редактирования задачи
 
     const convertToMoscowTime = (dateTimeString) => {
         const date = new Date(dateTimeString);
-        // Добавляем 3 часа к времени
         date.setHours(date.getHours() + 3);
         return date.toLocaleString("ru-RU", { timeZone: "Europe/Moscow" });
-    };    
+    };
 
     const getStatusText = (statusId) => {
         switch (statusId) {
@@ -79,6 +79,7 @@ const Issue = () => {
             const response = await fetch(`/api/issues/${id}`);
             if (response.ok) {
                 const data = await response.json();
+                console.log(data);
                 setIssue(data);
                 setLoading(false);
             } else {
@@ -89,15 +90,43 @@ const Issue = () => {
         }
     };
 
-   
-
     useEffect(() => {
         fetchIssue();
         fetchComments();
     }, [id]);
 
     const handleGoBack = () => {
-        navigate(-1);
+        window.history.back(); // Возвращаемся на предыдущую страницу
+    };
+
+    const [editFormData, setEditFormData] = useState(null);
+    const handleEditIssue = () => {
+        setShowEditModal(true); // Отображаем модальное окно для редактирования задачи
+        setEditFormData(issue);
+    };
+
+    const handleCloseEditModal = () => {
+        setShowEditModal(false); // Закрываем модальное окно для редактирования задачи
+    };
+
+    const handleUpdateIssue = async (formData) => {
+        try {
+            const response = await fetch(`/api/issues/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+            if (response.ok) {
+                const updatedIssue = await response.json();
+                setIssue(updatedIssue);
+            } else {
+                console.error("Error updating issue");
+            }
+        } catch (error) {
+            console.error("Error executing API request:", error);
+        }
     };
 
     return (
@@ -153,9 +182,36 @@ const Issue = () => {
                             </Form.Item>
                         </Form>
                     </div>
+                    {issue && (
+                        <Button type="primary" onClick={handleEditIssue} style={{ marginRight: "10px" }}>Edit Issue</Button>
+                    )}
                     <Button type="primary" onClick={handleGoBack} style={{ marginTop: "20px" }}>Back</Button>
+
                 </>
             )}
+
+            {/* Модальное окно для редактирования задачи */}
+            <Modal
+                title="Edit Issue"
+                visible={showEditModal}
+                onCancel={handleCloseEditModal}
+                footer={null}
+            >
+                {issue && (
+                    <IssueForm
+                        initialValues={editFormData} // Передаем текущие значения задачи в компонент IssueForm
+                        onSubmit={(formData) => {
+                            console.log("Form submitted with data:", formData);
+                            handleUpdateIssue(formData);
+                            handleCloseEditModal();
+                        }}
+                        onSubmitBack={handleCloseEditModal}
+                        statusId={issue.statusId}
+                        projectId={issue.projectId}
+                    />
+                )}
+            </Modal>
+
         </div>
     );
 };

@@ -3,19 +3,20 @@ import { Form, Input, Button, Select } from "antd";
 
 const { Option } = Select;
 
-const IssueForm = ({ onSubmit, onSubmitBack, statusId, projectId }) => {
+const IssueForm = ({initialValues, onSubmit, onSubmitBack, statusId, projectId }) => {
     const [formData, setFormData] = useState({
-        name: "",
-        description: "",
-        timeSpent: "",
-        statusId: parseInt(statusId),
-        assignedUserId: ""
+        name: initialValues ? initialValues.name : "",
+        description: initialValues ? initialValues.description : "",
+        timeSpent: initialValues ? initialValues.timeSpent : "",
+        statusId: initialValues ? parseInt(initialValues.statusId) : parseInt(statusId),
+        assignedUserId: initialValues ? initialValues.assignedUserId : ""
     });
     const [projectUsers, setProjectUsers] = useState([]);
 
     const getProjectUsers = async () => {
         try {
             const projectUsersResponse = await fetch(`/api/ProjectUsers/${projectId}`);
+            console.log(`/api/ProjectUsers/${projectId}`);
             const projectUsersData = await projectUsersResponse.json();
             setProjectUsers(projectUsersData);
         } catch (error) {
@@ -96,7 +97,7 @@ const IssueForm = ({ onSubmit, onSubmitBack, statusId, projectId }) => {
             </Form.Item>
             <Form.Item>
                 <Button type="primary" htmlType="submit">
-                    Добавить задачу
+                    Принять
                 </Button>
 
                 <Button style={{ marginLeft: "10px" }} onClick={handleBack}>
