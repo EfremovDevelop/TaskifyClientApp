@@ -1,16 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select } from "antd";
 
 const { Option } = Select;
 
-const IssueForm = ({ onSubmit, onSubmitBack, statusId, projectUsers }) => {
+const IssueForm = ({ onSubmit, onSubmitBack, statusId, projectId }) => {
     const [formData, setFormData] = useState({
         name: "",
         description: "",
         timeSpent: "",
         statusId: parseInt(statusId),
-        assignedUserId: "" // Добавленное поле для выбора AssignedUser
+        assignedUserId: ""
     });
+    const [projectUsers, setProjectUsers] = useState([]);
+
+    const getProjectUsers = async () => {
+        try {
+            const projectUsersResponse = await fetch(`/api/ProjectUsers/${projectId}`);
+            const projectUsersData = await projectUsersResponse.json();
+            setProjectUsers(projectUsersData);
+        } catch (error) {
+            console.error("Error fetching project users:", error);
+        }
+    };
+
+    useEffect(() => {
+        getProjectUsers();
+    }, []);
 
     const handleChange = (key, value) => {
         setFormData({

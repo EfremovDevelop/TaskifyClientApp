@@ -8,7 +8,6 @@ const Issues = ({ user }) => {
     const { projectId } = useParams();
     const [allIssues, setIssues] = useState([]);
     const [showForm, setShowForm] = useState(false);
-    const [projectUsers, setProjectUsers] = useState([]);
 
     const getIssues = async () => {
         const options = {
@@ -23,7 +22,6 @@ const Issues = ({ user }) => {
 
     useEffect(() => {
         getIssues();
-        getProjectUsers();
     }, [projectId]);
 
     const createIssue = async (formData) => {
@@ -68,16 +66,6 @@ const Issues = ({ user }) => {
         setShowForm(false);
     }
 
-    const getProjectUsers = async () => {
-        try {
-            const projectUsersResponse = await fetch(`/api/ProjectUsers/${projectId}`);
-            const projectUsersData = await projectUsersResponse.json();
-            setProjectUsers(projectUsersData);
-        } catch (error) {
-            console.error("Error fetching project users:", error);
-        }
-    };
-
     const columns = [
         {
             title: 'Name',
@@ -120,7 +108,7 @@ const Issues = ({ user }) => {
                     onSubmit={handleSubmitIssueForm}
                     onSubmitBack={handleBack}
                     statusId="1"
-                    projectUsers = {projectUsers}
+                    projectId = {projectId}
                 />
             ) : (
                 <>

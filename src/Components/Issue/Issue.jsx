@@ -16,8 +16,10 @@ const Issue = () => {
 
     const convertToMoscowTime = (dateTimeString) => {
         const date = new Date(dateTimeString);
+        // Добавляем 3 часа к времени
+        date.setHours(date.getHours() + 3);
         return date.toLocaleString("ru-RU", { timeZone: "Europe/Moscow" });
-    };
+    };    
 
     const getStatusText = (statusId) => {
         switch (statusId) {
@@ -86,6 +88,8 @@ const Issue = () => {
             console.error("Error executing API request:", error);
         }
     };
+
+   
 
     useEffect(() => {
         fetchIssue();

@@ -6,13 +6,14 @@ const { Text } = Typography;
 const Comment = ({ comment }) => {
     const convertToMoscowTime = (dateTimeString) => {
         const date = new Date(dateTimeString);
+        // Добавляем 3 часа к времени
+        date.setHours(date.getHours() + 3);
         return date.toLocaleString("ru-RU", { timeZone: "Europe/Moscow" });
     };
 
     return (
         <Row gutter={16} justify="space-between">
             <Col>
-                <Text strong>Комментарий: </Text>
                 <Text>{comment.comment}</Text>
                 <br />
             </Col>
@@ -22,7 +23,7 @@ const Comment = ({ comment }) => {
                         <Text strong>{comment.user.userName}</Text>
                     </Col>
                     <Col>
-                        <Text strong>{convertToMoscowTime(comment.createdDate)}</Text>
+                        <Text>{convertToMoscowTime(comment.createdDate)}</Text>
                     </Col>
                 </Row>
             </Col>
